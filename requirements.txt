@@ -1,0 +1,28 @@
+# Core ML/AI Libraries
+torch>=2.0.0
+transformers>=4.30.0
+scikit-learn>=1.3.0
+
+# Audio Processing
+librosa>=0.10.0
+openai-whisper>=20231117
+pyannote.audio>=3.0.0
+# opensmile-python>=1.0.0  # Note: Not available on PyPI, requires manual installation
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Audio Dependencies
+soundfile>=0.12.0
+scipy>=1.10.0
+resampy>=0.4.0
+
+# Utilities
+tqdm>=4.65.0
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Web (web/)
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0

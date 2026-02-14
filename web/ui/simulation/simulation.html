@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EdgeMind CX – Simulation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --surface: #131922;
+      --surface-2: #1a2232;
+      --surface-3: #232f42;
+      --accent: #3b82f6;
+      --accent-dim: #2563eb;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #22c55e;
+      --warn: #eab308;
+      --danger: #ef4444;
+      --stress: #f97316;
+      --empathy: #10b981;
+      --churn: #8b5cf6;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --radius-lg: 20px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.25);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 120% 70% at 50% -20%, rgba(59, 130, 246, 0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 50% at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+    .main { flex: 1; width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2rem) 2.5rem; }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(19,25,34,0.97) 0%, rgba(10,14,23,0.99) 100%);
+      padding: 2rem clamp(1rem, 3vw, 2rem) 2.25rem;
+      margin: 0 0 2rem 0;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+      backdrop-filter: blur(12px);
+    }
+    .hero .hero-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .hero .hero-brand { flex: 1 1 auto; min-width: 0; }
+    .hero h1 {
+      font-size: clamp(1.35rem, 2.2vw, 2rem);
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .tagline {
+      margin: 0.5rem 0 0;
+      font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    .hero .hero-nav-link {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(59, 130, 246, 0.08);
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .hero .hero-nav-link:hover { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.5); }
+
+    .section-block {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: clamp(1rem, 2.2vw, 1.35rem);
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .section-block {
+      margin-bottom: 1.75rem;
+    }
+    .section-block h2 {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin: 0 0 0.25rem 0;
+    }
+    .section-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.12);
+      line-height: 1.4;
+    }
+    .section-block > p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .stat-card {
+      background: var(--surface-2);
+      border-radius: var(--radius-sm);
+      padding: clamp(1rem, 2vw, 1.25rem);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .stat-card .stat-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .stat-card .stat-value {
+      font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .chart-placeholder {
+      width: 100%;
+      min-height: clamp(220px, 32vw, 360px);
+      background: var(--surface-2);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(0.75rem, 2vw, 1rem);
+    }
+    .chart-placeholder svg {
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+      aspect-ratio: 400 / 140;
+    }
+    .chart-insight {
+      margin: 1rem 0 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(59, 130, 246, 0.12);
+    }
+
+    .scenario-block {
+      margin-bottom: 1.75rem;
+    }
+    .scenario-toggle {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border-radius: var(--radius-sm);
+      background: var(--surface-2);
+      padding: 3px;
+      border: 1px solid rgba(255,255,255,0.06);
+      width: fit-content;
+    }
+    .scenario-toggle input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .scenario-toggle label {
+      display: block;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .scenario-toggle label:hover { color: var(--text); }
+    .scenario-toggle input:checked + label {
+      background: var(--accent);
+      color: var(--text);
+    }
+    .scenario-disclaimer {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.9;
+    }
+    .simulation-context {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding-top: 1.5rem; padding-bottom: 1.75rem; }
+      .dashboard-grid { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="hero-brand">
+          <h1>EdgeMind CX</h1>
+          <p class="tagline">Simulation & Edge Computing Metrics</p>
+        </div>
+        <a class="hero-nav-link" href="/">← Back to Home</a>
+      </div>
+    </header>
+    <main class="main">
+      <section class="section-block scenario-block">
+        <h2>Ne-olur-sa (What-if) Senaryosu</h2>
+        <p class="section-subtitle">Çağrı analizinin nerede çalıştığını karşılaştırın</p>
+        <div class="scenario-toggle" role="group" aria-label="Senaryo">
+          <input type="radio" name="scenario" id="scenario-cloud" value="cloud">
+          <label for="scenario-cloud">Sadece Cloud</label>
+          <input type="radio" name="scenario" id="scenario-hybrid" value="hybrid" checked>
+          <label for="scenario-hybrid">Hibrit</label>
+          <input type="radio" name="scenario" id="scenario-edge" value="edge">
+          <label for="scenario-edge">Edge Öncelikli</label>
+        </div>
+        <p class="scenario-disclaimer">Değerler dağıtım stratejilerini karşılaştırmak için simüle edilmiştir.</p>
+        <p id="simulation-context" class="simulation-context">Bu simülasyon, analiz edilen çağrı sesine benzer süre ve karmaşıklıkta <span id="simulation-call-count">—</span> müşteri çağrısı analizini varsayar (transkripsiyon, stres/empati ve CX skoru).</p>
+      </section>
+
+      <section class="section-block">
+        <h2>Simülasyon Özeti</h2>
+        <p class="section-subtitle">Çağrı analizi hacmi ve tamamlanma metrikleri (simüle)</p>
+        <div class="dashboard-grid">
+          <div class="stat-card">
+            <div class="stat-label">Toplam Çağrı (analiz hedefi)</div>
+            <div class="stat-value" data-key="total_tasks">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Başarıyla analiz edilen</div>
+            <div class="stat-value" data-key="completed_tasks">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Analiz başarısız</div>
+            <div class="stat-value" data-key="failed_tasks">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Edge'de analiz edilen</div>
+            <div class="stat-value" data-key="edge_executed_tasks">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block">
+        <h2>Gecikme Metrikleri</h2>
+        <p class="section-subtitle">Çağrı başına ortalama analiz süresi ve ağ gecikmesi (s)</p>
+        <div class="dashboard-grid">
+          <div class="stat-card">
+            <div class="stat-label">Ort. analiz süresi (çağrı başına)</div>
+            <div class="stat-value" data-key="avg_service_time">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ort. işlem süresi</div>
+            <div class="stat-value" data-key="avg_processing_time">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ort. ağ gecikmesi</div>
+            <div class="stat-value" data-key="avg_network_delay">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block">
+        <h2>Tahmini CX Etkisi</h2>
+        <p class="section-subtitle">Gecikmenin müşteri deneyimi üzerindeki simüle etkisi</p>
+        <div class="dashboard-grid">
+          <div class="stat-card">
+            <div class="stat-label">Seçili senaryo (simüle skor)</div>
+            <div class="stat-value" id="cx-impact-value">—</div>
+          </div>
+        </div>
+        <p id="cx-impact-comparison" class="chart-insight"></p>
+      </section>
+
+      <section class="section-block">
+        <h2>Edge vs Cloud Dağılımı</h2>
+        <p class="section-subtitle">Çağrı analizlerinin edge/cloud dağılımı</p>
+        <div class="chart-placeholder">
+          <svg id="edge-cloud-chart" viewBox="0 0 400 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+        </div>
+        <p id="edge-cloud-insight" class="chart-insight" aria-live="polite"></p>
+      </section>
+    </main>
+  </div>
+  <script>
+    (function () {
+      var baseMetrics = {
+        total_tasks: 2400,
+        completed_tasks: 2280,
+        failed_tasks: 120,
+        edge_executed_tasks: 1900,
+        avg_service_time: 7.97,
+        avg_processing_time: 7.91,
+        avg_network_delay: 0.055
+      };
+
+      var simulationMetrics = {};
+
+      var CX_BASELINE = 100;
+      var CX_K1 = 2;
+      var CX_K2 = 50;
+
+      function computeCxImpact(avgServiceTime, avgNetworkDelay) {
+        var penalty = avgServiceTime * CX_K1 + avgNetworkDelay * CX_K2;
+        return Math.max(0, Math.round((CX_BASELINE - penalty) * 10) / 10);
+      }
+
+      function copyMetrics(src, dst) {
+        for (var k in src) dst[k] = src[k];
+      }
+
+      function applyScenario(scenario) {
+        copyMetrics(baseMetrics, simulationMetrics);
+        var baseDelay = baseMetrics.avg_network_delay;
+        var baseProcessing = baseMetrics.avg_processing_time;
+
+        if (scenario === 'cloud') {
+          simulationMetrics.edge_executed_tasks = 0;
+          simulationMetrics.avg_network_delay = Math.round(baseDelay * 1.4 * 1000) / 1000;
+          simulationMetrics.avg_service_time = Math.round((baseProcessing + simulationMetrics.avg_network_delay) * 100) / 100;
+        } else if (scenario === 'edge') {
+          simulationMetrics.edge_executed_tasks = baseMetrics.completed_tasks;
+          simulationMetrics.avg_network_delay = Math.round(baseDelay * 0.6 * 1000) / 1000;
+          simulationMetrics.avg_service_time = Math.round((baseProcessing + simulationMetrics.avg_network_delay) * 100) / 100;
+        }
+      }
+
+      var latencyKeys = ['avg_service_time', 'avg_processing_time', 'avg_network_delay'];
+
+      function formatValue(key, value) {
+        if (value === undefined || value === null) return '—';
+        if (latencyKeys.indexOf(key) !== -1) {
+          return typeof value === 'number' ? value.toFixed(2) + ' s' : value + ' s';
+        }
+        if (typeof value === 'number') {
+          return Number.isInteger(value) ? String(value) : value.toFixed(2);
+        }
+        return String(value);
+      }
+
+      function render() {
+        var els = document.querySelectorAll('.stat-value[data-key]');
+        for (var i = 0; i < els.length; i++) {
+          var el = els[i];
+          var key = el.getAttribute('data-key');
+          var value = simulationMetrics[key];
+          el.textContent = formatValue(key, value);
+        }
+
+        var countEl = document.getElementById('simulation-call-count');
+        if (countEl) countEl.textContent = simulationMetrics.total_tasks ? simulationMetrics.total_tasks.toLocaleString() : '—';
+
+        var baseDelay = baseMetrics.avg_network_delay;
+        var baseProcessing = baseMetrics.avg_processing_time;
+        var serviceCloud = baseProcessing + baseDelay * 1.4;
+        var delayCloud = baseDelay * 1.4;
+        var serviceEdge = baseProcessing + baseDelay * 0.6;
+        var delayEdge = baseDelay * 0.6;
+        var cxCloud = computeCxImpact(serviceCloud, delayCloud);
+        var cxEdge = computeCxImpact(serviceEdge, delayEdge);
+        var cxCurrent = computeCxImpact(simulationMetrics.avg_service_time, simulationMetrics.avg_network_delay);
+
+        var cxValueEl = document.getElementById('cx-impact-value');
+        if (cxValueEl) cxValueEl.textContent = cxCurrent.toFixed(1);
+
+        var cxCompareEl = document.getElementById('cx-impact-comparison');
+        if (cxCompareEl) {
+          var diff = cxEdge - cxCloud;
+          cxCompareEl.textContent = 'Edge öncelikli senaryo, tahmini CX etkisini Sadece Cloud\'a göre ' + (diff >= 0 ? '+' : '') + diff.toFixed(1) + ' puan artırır (simüle).';
+        }
+
+        drawEdgeCloudChart();
+      }
+
+      function drawEdgeCloudChart() {
+        var svg = document.getElementById('edge-cloud-chart');
+        var insightEl = document.getElementById('edge-cloud-insight');
+        if (!svg) return;
+
+        var total = simulationMetrics.total_tasks;
+        var edge = simulationMetrics.edge_executed_tasks;
+        var cloud = total - edge;
+        if (total <= 0) return;
+
+        var edgePct = (edge / total) * 100;
+        var cloudPct = 100 - edgePct;
+
+        var ns = 'http://www.w3.org/2000/svg';
+        var pad = { left: 24, right: 24, top: 16, bottom: 56 };
+        var barW = 400 - pad.left - pad.right;
+        var barH = 28;
+        var barY = pad.top + 8;
+        var edgeWidth = Math.max(0, (edgePct / 100) * barW);
+        var cloudWidth = barW - edgeWidth;
+
+        function el(tag, attrs) {
+          var e = document.createElementNS(ns, tag);
+          for (var k in attrs) e.setAttribute(k, attrs[k]);
+          return e;
+        }
+
+        function textEl(x, y, content, attrs) {
+          var a = { x: x, y: y, 'font-size': '11', 'font-family': 'Inter, sans-serif', 'fill': 'var(--text-muted)' };
+          for (var k in attrs) a[k] = attrs[k];
+          var t = el('text', a);
+          t.textContent = content;
+          return t;
+        }
+
+        var g = el('g', { transform: 'translate(' + pad.left + ', 0)' });
+
+        var edgeRect = el('rect', {
+          x: 0,
+          y: barY,
+          width: edgeWidth,
+          height: barH,
+          rx: 4,
+          ry: 4,
+          fill: 'var(--accent)'
+        });
+        g.appendChild(edgeRect);
+
+        var cloudRect = el('rect', {
+          x: edgeWidth,
+          y: barY,
+          width: cloudWidth,
+          height: barH,
+          rx: 4,
+          ry: 4,
+          fill: 'var(--surface-3)'
+        });
+        g.appendChild(cloudRect);
+
+        var labelY = barY + barH + 22;
+        var edgeLabel = textEl(0, labelY, 'Edge: ' + edge.toLocaleString() + ' çağrı (' + edgePct.toFixed(2) + '%)', { 'text-anchor': 'start' });
+        g.appendChild(edgeLabel);
+
+        var cloudLabel = textEl(barW, labelY, 'Cloud: ' + cloud.toLocaleString() + ' çağrı (' + cloudPct.toFixed(2) + '%)', { 'text-anchor': 'end' });
+        g.appendChild(cloudLabel);
+
+        svg.innerHTML = '';
+        svg.appendChild(g);
+
+        if (insightEl) {
+          insightEl.textContent = 'Çağrı analizlerinin %' + edgePct.toFixed(2) + '\'i edge\'de işlendi; ortalama ağ gecikmesi düşer.';
+        }
+      }
+
+      function initScenario() {
+        applyScenario('hybrid');
+        render();
+
+        var inputs = document.querySelectorAll('input[name="scenario"]');
+        for (var i = 0; i < inputs.length; i++) {
+          inputs[i].addEventListener('change', function () {
+            applyScenario(this.value);
+            render();
+          });
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initScenario);
+      } else {
+        initScenario();
+      }
+    })();
+  </script>
+</body>
+</html>

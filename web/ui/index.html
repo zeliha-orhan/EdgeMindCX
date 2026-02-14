@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EdgeMind CX — AI-Powered Call & Behavioral Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --surface: #131922;
+      --surface-2: #1a2232;
+      --surface-3: #232f42;
+      --accent: #3b82f6;
+      --accent-dim: #2563eb;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #22c55e;
+      --warn: #eab308;
+      --danger: #ef4444;
+      --stress: #f97316;
+      --empathy: #10b981;
+      --churn: #8b5cf6;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --radius-lg: 20px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.25);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 120% 70% at 50% -20%, rgba(59, 130, 246, 0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 50% at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+    .main { flex: 1; width: 100%; max-width: none; padding: 0 2rem 2.5rem; }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(19,25,34,0.97) 0%, rgba(10,14,23,0.99) 100%);
+      padding: 2rem 2rem 2.25rem;
+      margin: 0 -2rem 2rem -2rem;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+      backdrop-filter: blur(12px);
+    }
+    .hero .hero-inner { max-width: 1400px; margin: 0 auto; }
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .tagline {
+      margin: 0.5rem 0 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    .hero .tagline span { color: var(--accent); font-weight: 600; }
+    .hero .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .hero .badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero .badge.accent { color: var(--accent); border-color: rgba(59, 130, 246, 0.35); background: rgba(59, 130, 246, 0.1); }
+    .hero-inner { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .hero-brand { flex: 1 1 auto; min-width: 0; }
+    .hero-nav-link {
+      font-size: 0.9rem; font-weight: 600; color: var(--accent);
+      text-decoration: none; white-space: nowrap;
+      padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(59, 130, 246, 0.08);
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .hero-nav-link:hover { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.5); }
+
+    .control-panel {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      align-items: start;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .control-panel .panel-left { min-width: 0; }
+    .control-panel .panel-right {
+      background: var(--surface-2);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .control-panel .panel-right .status-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .control-panel .card-hint { margin-bottom: 0.5rem; }
+    .control-panel input[type="file"] { margin: 0; }
+    .control-panel .btn-group { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-top: 1rem; }
+    .control-panel button { margin-top: 0; }
+    .control-panel .status { margin-top: 0.5rem; margin-bottom: 0; }
+    .analysis-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-top: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(59, 130, 246, 0.12);
+    }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .card-hint { font-size: 0.8rem; color: var(--text-muted); margin: 0 0 0.5rem 0; line-height: 1.45; }
+    input[type="file"] {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 2px dashed var(--surface-3);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      background: rgba(10,14,23,0.5);
+      color: var(--text);
+      transition: border-color 0.2s ease;
+    }
+    input[type="file"]:hover, input[type="file"]:focus { border-color: var(--accent); outline: none; }
+    button {
+      margin-top: 0;
+      padding: 0.7rem 1.4rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent-dim) 0%, var(--accent) 100%);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(59, 130, 246, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    button.secondary { background: var(--surface-2); color: var(--text); box-shadow: none; border: 1px solid rgba(255,255,255,0.1); }
+    button.secondary:hover { background: var(--surface-3); }
+    .status { font-size: 0.8rem; word-break: break-all; padding: 0.35rem 0; font-weight: 500; }
+    .status.error { color: var(--danger); }
+    .status.success { color: var(--success); }
+    .progress-wrap {
+      height: 10px;
+      background: var(--surface-3);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0.6rem 0;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-dim) 0%, var(--accent) 100%);
+      border-radius: 999px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .step { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 600; }
+    .result-summary { margin-top: 0.75rem; }
+    .results-section { margin-top: 0; margin-bottom: 2rem; }
+    .results-section.reveal { animation: revealIn 0.4s ease forwards; }
+    @keyframes revealIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .skeleton { background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: skeleton 1.2s ease-in-out infinite; border-radius: var(--radius-sm); }
+    @keyframes skeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .skeleton-loading { margin-bottom: 2rem; }
+    .skeleton-loading .skeleton-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem; }
+    .skeleton-loading .skeleton-card { min-height: 80px; }
+    .results-section .section-title {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    .section-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.12);
+      line-height: 1.4;
+    }
+    .executive-summary {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 2.5rem;
+      background: linear-gradient(145deg, var(--surface) 0%, rgba(19,25,34,0.98) 100%);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.5rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(59, 130, 246, 0.12);
+    }
+    .executive-summary .cx-block { min-width: 0; }
+    .executive-summary .exec-meta { display: flex; flex-wrap: wrap; gap: 1.5rem 2rem; align-items: center; justify-content: center; }
+    .exec-meta-item { font-size: 0.85rem; }
+    .exec-meta-item .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.2rem; font-weight: 700; }
+    .exec-meta-item .value { font-weight: 600; color: var(--text); }
+    .results-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .results-grid .kpi-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+    .results-grid .top-summary { grid-column: 1 / -1; display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+    .results-grid .metrics-panel,
+    .results-grid .chart-panel,
+    .results-grid .transcript-panel { grid-column: 1 / -1; }
+    .kpi-card {
+      background: var(--surface-2);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .kpi-card .kpi-value { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+    .kpi-card .kpi-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-top: 0.25rem; font-weight: 700; }
+    .top-summary {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      border: none;
+    }
+    .top-summary .cx-block { min-width: 0; }
+    .top-summary .meta-block { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+    .top-summary .meta-block strong { color: var(--text); }
+    .meta-grid { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: baseline; }
+    .meta-item { display: inline-flex; align-items: baseline; gap: 0.35rem; }
+    .meta-label { text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; }
+    .meta-id-wrap { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+    .meta-id-wrap span:last-child { font-variant-numeric: tabular-nums; }
+    .cx-gauge-wrap {
+      width: 100%; max-width: 140px; margin: 0 auto 0.5rem;
+      position: relative; height: 72px; overflow: hidden;
+    }
+    .cx-gauge-bg {
+      position: absolute; left: 50%; margin-left: -70px; bottom: 0;
+      height: 140px; width: 140px; border-radius: 140px 140px 0 0;
+      box-sizing: border-box; border: 12px solid var(--surface-2); border-bottom: none; background: transparent;
+    }
+    .cx-gauge-fill {
+      position: absolute; left: 50%; margin-left: -70px; bottom: 0;
+      height: 140px; width: 140px; border-radius: 140px 140px 0 0;
+      box-sizing: border-box; border: 12px solid var(--accent); border-bottom: none; background: transparent;
+      transform-origin: center bottom; transform: rotate(-90deg);
+      transition: transform 0.5s ease, border-color 0.3s ease;
+      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.5));
+    }
+    .cx-gauge-fill.good { border-color: var(--success); filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.45)); }
+    .cx-gauge-fill.mid { border-color: var(--warn); filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.45)); }
+    .cx-gauge-fill.low { border-color: var(--danger); filter: drop-shadow(0 0 12px rgba(248, 113, 113, 0.45)); }
+    .cx-card {
+      background: var(--surface);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      padding: 1.1rem 1.25rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .cx-card .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.25rem; font-weight: 800; }
+    .cx-card .value { font-size: 2.1rem; font-weight: 800; line-height: 1; color: var(--text); letter-spacing: -0.03em; }
+    .cx-card .max { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+    .section-block {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .metric-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .metric-card {
+      background: var(--surface-2);
+      border-radius: var(--radius-sm);
+      padding: 1.35rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -8px rgba(0,0,0,0.4); }
+    .metric-card.stress {
+      border-top: 3px solid var(--stress);
+      background: linear-gradient(180deg, rgba(251,146,60,0.12) 0%, var(--surface-2) 30%);
+    }
+    .metric-card.empathy {
+      border-top: 3px solid var(--empathy);
+      background: linear-gradient(180deg, rgba(52,211,153,0.12) 0%, var(--surface-2) 30%);
+    }
+    .metric-card.churn {
+      border-top: 3px solid var(--churn);
+      background: linear-gradient(180deg, rgba(167,139,250,0.12) 0%, var(--surface-2) 30%);
+    }
+    .metric-card .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 800; }
+    .metric-card .value { font-size: 1.25rem; font-weight: 800; color: var(--text); }
+    .metric-card .sublabel { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.35rem; opacity: 0.9; }
+    .metric-progress {
+      height: 8px; background: rgba(0,0,0,0.25); border-radius: 999px; overflow: hidden; margin-top: 0.6rem;
+    }
+    .metric-progress-fill { height: 100%; width: 0%; border-radius: 999px; transition: width 0.4s ease; }
+    .metric-card.stress .metric-progress-fill { background: linear-gradient(90deg, #ea580c 0%, var(--stress) 100%); }
+    .metric-card.stress.low .metric-progress-fill { background: linear-gradient(90deg, #22c55e 0%, var(--empathy) 100%); }
+    .metric-card.empathy .metric-progress-fill { background: linear-gradient(90deg, #059669 0%, var(--empathy) 100%); }
+    .metric-card.churn .metric-progress-fill { background: linear-gradient(90deg, #7c3aed 0%, var(--churn) 100%); }
+    .chart-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0 0 0.75rem 0;
+      line-height: 1.5;
+    }
+    .chart-desc.hidden { display: none; }
+    .time-based {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      padding: 1.2rem;
+      min-height: 80px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .time-based .placeholder { font-style: italic; }
+    .time-chart-wrap {
+      position: relative; width: 100%; height: 220px;
+      background: rgba(15,23,42,0.5); border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);
+    }
+    .time-chart-wrap svg { display: block; width: 100%; height: 100%; }
+    .time-chart-tooltip {
+      position: fixed; max-width: 320px; padding: 0.75rem 1rem;
+      background: var(--surface); color: var(--text);
+      font-size: 0.8125rem; line-height: 1.5; border-radius: var(--radius-sm);
+      pointer-events: none; z-index: 1000;
+      box-shadow: var(--shadow-lg); display: none;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    .time-chart-tooltip.visible { display: block; }
+    .time-chart-tooltip .ts { font-size: 0.7rem; color: var(--accent); margin-bottom: 0.35rem; font-weight: 600; }
+    .transcript-section {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    .text-summary {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      padding: 1.35rem;
+    }
+    .text-summary .title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.6rem; }
+    .text-summary .transcript {
+      font-size: 0.9rem; line-height: 1.7; color: var(--text);
+      max-height: 340px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;
+    }
+    .ai-summary-box {
+      background: var(--surface-2);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      position: sticky; top: 1rem;
+    }
+    .ai-summary-box .title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem; }
+    .ai-summary-box .content { font-size: 0.85rem; line-height: 1.6; color: var(--text-muted); }
+    #resultError {
+      background: rgba(248, 113, 113, 0.12) !important;
+      border: 1px solid rgba(248, 113, 113, 0.3) !important;
+      border-radius: var(--radius-sm) !important;
+      padding: 1rem 1.2rem !important;
+      color: var(--danger) !important;
+      font-weight: 600;
+    }
+    .app-footer {
+      margin-top: 2.5rem;
+      padding: 1rem 0 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      text-align: center;
+    }
+    .progress-bar.running {
+      background: linear-gradient(90deg, var(--accent-dim) 0%, var(--accent) 50%, var(--accent-dim) 100%);
+      background-size: 200% 100%;
+      animation: progressShine 2s ease-in-out infinite;
+    }
+    @keyframes progressShine {
+      0%, 100% { background-position: 100% 0; }
+      50% { background-position: 0 0; }
+    }
+    @media (max-width: 1100px) {
+      .control-panel { grid-template-columns: 1fr; }
+      .executive-summary { grid-template-columns: 1fr; }
+      .transcript-section { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .results-grid { grid-template-columns: 1fr; }
+      .metric-cards { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .main { padding: 0 1rem 1.5rem; }
+      .hero { margin: 0 -1rem 1.5rem -1rem; padding: 1.5rem 1rem; }
+      .hero h1 { font-size: 1.5rem; }
+      .hero .tagline { font-size: 0.85rem; }
+      .top-summary { grid-template-columns: 1fr; }
+      .exec-meta { flex-direction: column; align-items: stretch; }
+      .metric-cards { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-brand">
+        <h1>EdgeMind CX</h1>
+        <p class="tagline">AI-Powered Call & Behavioral Analytics — Ses tonu, konuşma hızı ve etkileşim dinamiklerinden <span>stres, empati ve canlı CX skoru</span> hesaplanır.</p>
+        <div class="badges">
+          <span class="badge accent">Edge · Düşük gecikme</span>
+          <span class="badge">KVKK uyumlu</span>
+          <span class="badge">Ham veri merkeze gönderilmez</span>
+        </div>
+      </div>
+      <a href="/simulation" class="hero-nav-link">Simulation Results</a>
+    </div>
+  </header>
+  <main class="main">
+
+  <section class="control-panel">
+    <div class="panel-left">
+      <label for="file">Çağrı ses dosyası (.wav)</label>
+      <p class="card-hint">Ses edge üzerinde işlenir; analiz düşük gecikmeyle yapılır.</p>
+      <input type="file" id="file" accept=".wav">
+      <div id="uploadStatus" class="status hidden"></div>
+      <div class="btn-group">
+        <button type="button" id="btnUpload">Yükle</button>
+        <span class="btn-group hidden" id="cardAnalyze">
+          <button type="button" id="btnAnalyze">Analizi başlat</button>
+        </span>
+      </div>
+      <div id="analyzeStatus" class="status hidden"></div>
+    </div>
+    <div class="panel-right">
+      <div class="status-label">Sistem durumu</div>
+      <div class="step" id="stepText">—</div>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="status" id="progressStatus">—</div>
+      <span class="analysis-badge">Full analysis</span>
+    </div>
+  </section>
+
+  <div id="skeletonLoading" class="skeleton-loading hidden">
+    <div class="skeleton skeleton-card" style="height: 140px; margin-bottom: 1rem;"></div>
+    <div class="skeleton-row">
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+    </div>
+    <div class="skeleton skeleton-card" style="height: 200px; margin-top: 1rem;"></div>
+  </div>
+
+  <div id="resultsSection" class="results-section hidden reveal">
+      <div class="section-title">Executive Summary</div>
+      <div class="section-subtitle">Çağrı özeti ve canlı CX skoru — C-level özet</div>
+      <div class="executive-summary">
+        <div class="top-summary">
+          <div class="cx-block">
+            <div id="cxCard" class="cx-card">
+              <div class="label">CX Score</div>
+              <div class="cx-gauge-wrap">
+                <div class="cx-gauge-bg"></div>
+                <div id="cxGaugeFill" class="cx-gauge-fill"></div>
+              </div>
+              <div class="value" id="cxValue">—</div>
+              <span class="max">/ 100</span>
+            </div>
+          </div>
+        </div>
+        <div class="exec-meta">
+          <div class="kpi-card">
+            <div class="kpi-value" id="metaDuration">—</div>
+            <div class="kpi-label">Süre</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="metaSilence">—</div>
+            <div class="kpi-label">Sessizlik</div>
+          </div>
+          <div class="exec-meta-item">
+            <div class="label">Risk seviyesi</div>
+            <div class="value" id="riskLevelText">—</div>
+          </div>
+          <div class="exec-meta-item">
+            <div class="label">Genel duygu</div>
+            <div class="value" id="sentimentText">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value meta-id-wrap" id="metaCallIdWrap" title=""><span id="metaCallId">—</span></div>
+            <div class="kpi-label">Çağrı ID</div>
+          </div>
+        </div>
+      </div>
+      <div class="results-grid">
+        <div class="section-block metrics-panel">
+          <div class="section-title">Davranışsal metrikler</div>
+          <div class="section-subtitle">Ses tonu ve etkileşim dinamiklerinden türetilen sinyaller</div>
+          <div class="metric-cards">
+          <div class="metric-card stress" id="stressCard">
+            <div class="label">Müşteri stres eğilimi</div>
+            <div class="value" id="stressValue">—</div>
+            <div class="metric-progress"><div id="stressProgressFill" class="metric-progress-fill"></div></div>
+            <div class="sublabel" id="stressSublabel">0–1 (düşük iyi)</div>
+          </div>
+          <div class="metric-card empathy">
+            <div class="label">Temsilci–müşteri empati</div>
+            <div class="value" id="empathyValue">—</div>
+            <div class="metric-progress"><div id="empathyProgressFill" class="metric-progress-fill"></div></div>
+            <div class="sublabel" id="empathySublabel">0–1 (yüksek iyi)</div>
+          </div>
+          <div class="metric-card churn">
+            <div class="label">Erken kopma riski</div>
+            <div class="value" id="churnValue">—</div>
+            <div class="metric-progress"><div id="churnProgressFill" class="metric-progress-fill"></div></div>
+            <div class="sublabel" id="churnSublabel">veri varsa</div>
+          </div>
+        </div>
+        </div>
+        <div class="section-block chart-panel">
+          <div class="section-title">Zaman bazlı analiz</div>
+          <div class="section-subtitle">Çağrı boyunca segment süreleri ve davranışsal özet</div>
+          <p class="chart-desc hidden" id="timeChartDesc">Çağrı boyunca konuşma segmentlerinin <strong>göreli süreleri</strong> (yukarı = daha uzun segment). Kesikli turuncu çizgi tüm çağrı stres değerini gösterir.</p>
+          <div class="time-based">
+            <span id="timeChartPlaceholder" class="placeholder">Süre / zaman eksenine göre metrikler bu alanda gösterilebilir.</span>
+            <div id="timeChartWrap" class="time-chart-wrap hidden"></div>
+          </div>
+          <div id="timeChartTooltip" class="time-chart-tooltip"></div>
+        </div>
+        <div class="section-block transcript-panel">
+          <div class="section-title">Transcript & AI Özet</div>
+          <div class="section-subtitle">Konuşma metni ve analiz özeti</div>
+          <div class="transcript-section">
+            <div class="text-summary">
+              <div class="title">Transkript</div>
+              <div class="transcript" id="callTranscript">—</div>
+            </div>
+            <div class="ai-summary-box">
+              <div class="title">Çağrı özeti</div>
+              <div class="content" id="aiSummaryContent">Analiz tamamlandığında özet burada görünecek.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div id="resultError" class="result-summary hidden"></div>
+
+  <footer class="app-footer">
+    <p>Veriler edge üzerinde işlenir; ham ses merkezi sistemlere gönderilmez. KVKK uyumlu, düşük gecikmeli analiz.</p>
+  </footer>
+  </main>
+  </div>
+  <script>
+    (function () {
+      const fileInput = document.getElementById('file');
+      const btnUpload = document.getElementById('btnUpload');
+      const uploadStatus = document.getElementById('uploadStatus');
+      const cardAnalyze = document.getElementById('cardAnalyze');
+      const btnAnalyze = document.getElementById('btnAnalyze');
+      const analyzeStatus = document.getElementById('analyzeStatus');
+      const stepText = document.getElementById('stepText');
+      const progressBar = document.getElementById('progressBar');
+      const progressStatus = document.getElementById('progressStatus');
+      const resultsSection = document.getElementById('resultsSection');
+      const resultError = document.getElementById('resultError');
+      const skeletonLoading = document.getElementById('skeletonLoading');
+
+      let callId = null;
+      let jobId = null;
+      let pollTimer = null;
+
+      function showStatus(el, text, isError) {
+        el.textContent = text;
+        el.classList.remove('hidden', 'error', 'success');
+        if (isError) el.classList.add('error');
+        else if (text && text.length) el.classList.add('success');
+      }
+
+      function hideStatus(el) {
+        el.classList.add('hidden');
+        el.textContent = '';
+      }
+
+      async function upload() {
+        const file = fileInput.files[0];
+        if (!file) {
+          showStatus(uploadStatus, 'Lütfen bir .wav dosyası seçin.', true);
+          return;
+        }
+        if (!file.name.toLowerCase().endsWith('.wav')) {
+          showStatus(uploadStatus, 'Sadece .wav dosyaları kabul edilir.', true);
+          return;
+        }
+        btnUpload.disabled = true;
+        hideStatus(uploadStatus);
+        try {
+          const form = new FormData();
+          form.append('file', file);
+          const r = await fetch('/api/upload', { method: 'POST', body: form });
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) {
+            showStatus(uploadStatus, data.detail || 'Yükleme başarısız.', true);
+            btnUpload.disabled = false;
+            return;
+          }
+          callId = data.call_id;
+          showStatus(uploadStatus, 'Yüklendi: ' + callId);
+          cardAnalyze.classList.remove('hidden');
+        } catch (e) {
+          showStatus(uploadStatus, 'Bağlantı hatası: ' + e.message, true);
+        }
+        btnUpload.disabled = false;
+      }
+
+      async function startAnalyze() {
+        if (!callId) return;
+        btnAnalyze.disabled = true;
+        hideStatus(analyzeStatus);
+        try {
+          const r = await fetch('/api/analyze/' + encodeURIComponent(callId), { method: 'POST' });
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) {
+            showStatus(analyzeStatus, data.detail || 'Analiz başlatılamadı.', true);
+            btnAnalyze.disabled = false;
+            return;
+          }
+          jobId = data.job_id;
+          stepText.textContent = 'Başlatılıyor…';
+          progressBar.style.width = '0%';
+          progressBar.classList.add('running');
+          progressStatus.textContent = 'Job: ' + jobId;
+          resultsSection.classList.add('hidden');
+          resultError.classList.add('hidden');
+          resultError.textContent = '';
+          if (skeletonLoading) skeletonLoading.classList.remove('hidden');
+          startPolling();
+        } catch (e) {
+          showStatus(analyzeStatus, 'Bağlantı hatası: ' + e.message, true);
+          btnAnalyze.disabled = false;
+        }
+      }
+
+      function stopPolling() {
+        if (pollTimer) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+        }
+        progressBar.classList.remove('running');
+        btnAnalyze.disabled = false;
+      }
+
+      function startPolling() {
+        if (pollTimer) return;
+        pollTimer = setInterval(pollJob, 2000);
+        pollJob();
+      }
+
+      async function pollJob() {
+        if (!jobId) return;
+        try {
+          const r = await fetch('/api/job/' + encodeURIComponent(jobId));
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) return;
+
+          const p = Math.max(0, Math.min(100, Number(data.progress) || 0));
+          progressBar.style.width = p + '%';
+          stepText.textContent = data.current_step || data.status || '—';
+          progressStatus.textContent = data.status + ' · ' + (data.elapsed_time != null ? Math.round(data.elapsed_time) + ' s' : '');
+
+          if (data.status === 'done') {
+            stopPolling();
+            progressBar.classList.remove('running');
+            stepText.textContent = 'Tamamlandı';
+            progressBar.style.width = '100%';
+            if (skeletonLoading) skeletonLoading.classList.add('hidden');
+            await showResultSummary();
+          } else if (data.status === 'error') {
+            stopPolling();
+            progressBar.classList.remove('running');
+            stepText.textContent = 'Hata';
+            if (skeletonLoading) skeletonLoading.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            resultError.classList.remove('hidden');
+            resultError.textContent = 'Hata: ' + (data.error || 'Bilinmeyen hata');
+          }
+        } catch (_) {}
+      }
+
+      function cxClass(score) {
+        if (score >= 70) return 'good';
+        if (score >= 40) return 'mid';
+        return 'low';
+      }
+
+      function drawTimeChart(segments, stressVal) {
+        var wrap = document.getElementById('timeChartWrap');
+        var tooltip = document.getElementById('timeChartTooltip');
+        wrap.innerHTML = '';
+        if (!segments || segments.length === 0) return;
+        function segStart(seg) { return Number(seg.start_time != null ? seg.start_time : seg.start != null ? seg.start : 0); }
+        function segEnd(seg) { return Number(seg.end_time != null ? seg.end_time : seg.end != null ? seg.end : 0); }
+        var T = 0;
+        var durations = [];
+        for (var i = 0; i < segments.length; i++) {
+          var s = segStart(segments[i]), e = segEnd(segments[i]);
+          if (e > T) T = e;
+          durations.push(Math.max(0, e - s));
+        }
+        if (T <= 0) T = 1;
+        var maxDur = Math.max.apply(null, durations) || 1;
+        var w = 800;
+        var h = 200;
+        var pad = { top: 14, right: 14, bottom: 32, left: 56 };
+        var xScale = (w - pad.left - pad.right) / T;
+        var yScale = (h - pad.top - pad.bottom);
+        var points = [];
+        for (var j = 0; j < segments.length; j++) {
+          var s = segStart(segments[j]), e = segEnd(segments[j]);
+          var norm = Math.min(1, durations[j] / maxDur);
+          var y = pad.top + (1 - norm) * yScale;
+          if (j === 0) points.push((pad.left + s * xScale) + ',' + y);
+          points.push((pad.left + s * xScale) + ',' + y);
+          points.push((pad.left + e * xScale) + ',' + y);
+        }
+        if (segments.length > 0) points.push((pad.left + T * xScale) + ',' + (pad.top + (1 - Math.min(1, durations[durations.length - 1] / maxDur)) * yScale));
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+        svg.setAttribute('preserveAspectRatio', 'none');
+        if (stressVal != null && !isNaN(stressVal)) {
+          var refY = pad.top + (1 - Math.max(0, Math.min(1, stressVal))) * yScale;
+          var refLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          refLine.setAttribute('x1', pad.left);
+          refLine.setAttribute('y1', refY);
+          refLine.setAttribute('x2', w - pad.right);
+          refLine.setAttribute('y2', refY);
+          refLine.setAttribute('stroke', 'rgba(251,146,60,0.5)');
+          refLine.setAttribute('stroke-width', '1');
+          refLine.setAttribute('stroke-dasharray', '4 2');
+          svg.appendChild(refLine);
+        }
+        var line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        line.setAttribute('fill', 'none');
+        line.setAttribute('stroke', '#3b82f6');
+        line.setAttribute('stroke-width', '1.5');
+        line.setAttribute('points', points.join(' '));
+        svg.appendChild(line);
+        var axis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        axis.setAttribute('x1', pad.left);
+        axis.setAttribute('y1', h - pad.bottom);
+        axis.setAttribute('x2', w - pad.right);
+        axis.setAttribute('y2', h - pad.bottom);
+        axis.setAttribute('stroke', '#475569');
+        axis.setAttribute('stroke-width', '1');
+        svg.appendChild(axis);
+        var xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        xLabel.setAttribute('x', (pad.left + w - pad.right) / 2);
+        xLabel.setAttribute('y', h - 8);
+        xLabel.setAttribute('text-anchor', 'middle');
+        xLabel.setAttribute('fill', '#94a3b8');
+        xLabel.setAttribute('font-size', '11');
+        xLabel.textContent = 'Zaman (s)';
+        svg.appendChild(xLabel);
+        var yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yLabel.setAttribute('x', 18);
+        yLabel.setAttribute('y', (pad.top + h - pad.bottom) / 2);
+        yLabel.setAttribute('text-anchor', 'middle');
+        yLabel.setAttribute('fill', '#94a3b8');
+        yLabel.setAttribute('font-size', '11');
+        yLabel.setAttribute('transform', 'rotate(-90, 18, ' + ((pad.top + h - pad.bottom) / 2) + ')');
+        yLabel.textContent = 'Segment süresi (göreli)';
+        svg.appendChild(yLabel);
+        var hit = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        hit.setAttribute('x', pad.left);
+        hit.setAttribute('y', pad.top);
+        hit.setAttribute('width', w - pad.left - pad.right);
+        hit.setAttribute('height', h - pad.top - pad.bottom);
+        hit.setAttribute('fill', 'transparent');
+        hit.setAttribute('cursor', 'crosshair');
+        svg.appendChild(hit);
+        wrap.appendChild(svg);
+        function findSegment(evt) {
+          var rect = wrap.getBoundingClientRect();
+          var svgX = (evt.clientX - rect.left) * w / rect.width;
+          if (svgX < pad.left || svgX > w - pad.right) return null;
+          var dataX = (svgX - pad.left) / (w - pad.left - pad.right) * T;
+          if (dataX < 0 || dataX > T) return null;
+          for (var k = 0; k < segments.length; k++) {
+            var st = segStart(segments[k]), en = segEnd(segments[k]);
+            if (dataX >= st && dataX <= en) return { seg: segments[k], evt: evt };
+          }
+          return null;
+        }
+        wrap.addEventListener('mousemove', function(evt) {
+          var found = findSegment(evt);
+          if (found) {
+            var t = segStart(found.seg).toFixed(1);
+            var e = segEnd(found.seg).toFixed(1);
+            tooltip.innerHTML = '<div class="ts">' + t + ' s – ' + e + ' s</div><div>' + (found.seg.text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div>';
+            tooltip.classList.add('visible');
+            tooltip.style.left = (found.evt.clientX + 12) + 'px';
+            tooltip.style.top = (found.evt.clientY + 12) + 'px';
+          } else {
+            tooltip.classList.remove('visible');
+          }
+        });
+        wrap.addEventListener('mouseleave', function() { tooltip.classList.remove('visible'); });
+      }
+
+      function formatNum(v) {
+        if (v == null || v === '') return '—';
+        const n = Number(v);
+        if (isNaN(n)) return '—';
+        return n.toFixed(2);
+      }
+
+      async function showResultSummary() {
+        resultError.classList.add('hidden');
+        if (!jobId) return;
+        try {
+          const r = await fetch('/api/jobs/' + encodeURIComponent(jobId));
+          const job = await r.json().catch(() => ({}));
+          const res = job.result;
+          if (!res) {
+            resultsSection.classList.remove('hidden');
+            document.getElementById('cxValue').textContent = '—';
+            document.getElementById('cxGaugeFill').style.transform = 'rotate(-90deg)';
+            document.getElementById('cxGaugeFill').className = 'cx-gauge-fill';
+            document.getElementById('stressValue').textContent = '—';
+            document.getElementById('stressProgressFill').style.width = '0%';
+            document.getElementById('stressCard').classList.remove('low');
+            document.getElementById('empathyValue').textContent = '—';
+            document.getElementById('empathyProgressFill').style.width = '0%';
+            document.getElementById('churnValue').textContent = '—';
+            document.getElementById('churnProgressFill').style.width = '0%';
+            document.getElementById('metaDuration').textContent = 'Sonuç verisi yok.';
+            document.getElementById('metaSilence').textContent = '—';
+            document.getElementById('metaCallId').textContent = '—';
+            document.getElementById('metaCallIdWrap').title = '';
+            var rEl = document.getElementById('riskLevelText');
+            var sEl = document.getElementById('sentimentText');
+            if (rEl) rEl.textContent = '—';
+            if (sEl) sEl.textContent = '—';
+            document.getElementById('callTranscript').textContent = '—';
+            return;
+          }
+
+          var cxScore = res.cx_score != null ? Number(res.cx_score) : null;
+          var stress = res.stress_score != null ? Number(res.stress_score) : null;
+          var empathy = res.empathy_score != null ? Number(res.empathy_score) : null;
+          var churn = res.churn_risk_score ?? res.early_churn_risk ?? res.churn_risk ?? null;
+          if (churn != null) churn = Number(churn);
+
+          var cxValEl = document.getElementById('cxValue');
+          if (cxValEl) {
+            if (cxScore == null) { cxValEl.textContent = '—'; }
+            else {
+              var from = 0, to = cxScore, start = performance.now(), dur = 280;
+              function tick(now) {
+                var t = Math.min((now - start) / dur, 1);
+                var eased = 1 - Math.pow(1 - t, 2);
+                cxValEl.textContent = (from + (to - from) * eased).toFixed(1);
+                if (t < 1) requestAnimationFrame(tick); else cxValEl.textContent = to.toFixed(1);
+              }
+              requestAnimationFrame(tick);
+            }
+          }
+          var gaugeFill = document.getElementById('cxGaugeFill');
+          var deg = cxScore != null ? -90 + (cxScore / 100) * 180 : -90;
+          gaugeFill.style.transform = 'rotate(' + deg + 'deg)';
+          gaugeFill.className = 'cx-gauge-fill' + (cxScore != null ? ' ' + cxClass(cxScore) : '');
+          var riskEl = document.getElementById('riskLevelText');
+          var sentEl = document.getElementById('sentimentText');
+          if (riskEl) riskEl.textContent = cxScore == null ? '—' : (cxScore >= 70 ? 'Düşük' : cxScore >= 40 ? 'Orta' : 'Yüksek');
+          if (sentEl) sentEl.textContent = cxScore == null ? '—' : (cxScore >= 70 ? 'Olumlu' : cxScore >= 40 ? 'Nötr' : 'Olumsuz');
+
+          document.getElementById('stressValue').textContent = formatNum(stress);
+          var stressPct = stress != null ? Math.min(100, Math.max(0, stress * 100)) : 0;
+          document.getElementById('stressProgressFill').style.width = stressPct + '%';
+          var stressCard = document.getElementById('stressCard');
+          if (stress != null && stress < 0.3) stressCard.classList.add('low'); else stressCard.classList.remove('low');
+
+          document.getElementById('empathyValue').textContent = formatNum(empathy);
+          var empathyPct = empathy != null ? Math.min(100, Math.max(0, empathy * 100)) : 0;
+          document.getElementById('empathyProgressFill').style.width = empathyPct + '%';
+
+          document.getElementById('churnValue').textContent = churn != null ? formatNum(churn) : '—';
+          document.getElementById('churnSublabel').textContent = churn != null ? 'risk skoru' : 'veri yok';
+          var churnPct = churn != null ? (churn <= 1 ? churn * 100 : Math.min(100, churn)) : 0;
+          document.getElementById('churnProgressFill').style.width = churnPct + '%';
+
+          var af = res.audio_features;
+          document.getElementById('metaDuration').textContent = (af && af.total_duration != null) ? (Math.round(Number(af.total_duration)) + ' s') : '—';
+          document.getElementById('metaSilence').textContent = (af && af.silence_ratio != null) ? ((Number(af.silence_ratio) * 100).toFixed(1) + '%') : '—';
+          var callIdShort = (res.call_id && res.call_id.length > 10) ? res.call_id.slice(0, 8) + '…' : (res.call_id || '—');
+          document.getElementById('metaCallId').textContent = callIdShort;
+          document.getElementById('metaCallIdWrap').title = res.call_id ? ('Call: ' + res.call_id + (res.filename ? '\nDosya: ' + res.filename : '')) : '';
+
+          var text = (res.transcription && res.transcription.text) ? res.transcription.text.trim() : '';
+          document.getElementById('callTranscript').textContent = text || 'Transkript yok.';
+          var summaryParts = [];
+          if (cxScore != null) summaryParts.push('CX skoru ' + cxScore.toFixed(1) + '/100.');
+          if (af && af.total_duration != null) summaryParts.push('Süre ' + Math.round(Number(af.total_duration)) + ' s.');
+          if (stress != null) summaryParts.push('Stres ' + (stress < 0.3 ? 'düşük' : stress < 0.6 ? 'orta' : 'yüksek') + ' (' + formatNum(stress) + ').');
+          if (empathy != null) summaryParts.push('Empati ' + (empathy >= 0.5 ? 'iyi' : 'düşük') + ' (' + formatNum(empathy) + ').');
+          if (churn != null) summaryParts.push('Erken kopma riski ' + formatNum(churn) + '.');
+          var summaryEl = document.getElementById('aiSummaryContent');
+          if (summaryEl) summaryEl.textContent = summaryParts.length ? summaryParts.join(' ') : 'Özet verisi yok.';
+
+          var segments = res.transcription && res.transcription.segments && res.transcription.segments.length;
+          if (segments && res.transcription.segments.length > 0) {
+            drawTimeChart(res.transcription.segments, stress != null ? stress : 0.5);
+            document.getElementById('timeChartPlaceholder').classList.add('hidden');
+            document.getElementById('timeChartWrap').classList.remove('hidden');
+            var descEl = document.getElementById('timeChartDesc');
+            if (descEl) descEl.classList.remove('hidden');
+          } else {
+            document.getElementById('timeChartPlaceholder').classList.remove('hidden');
+            document.getElementById('timeChartWrap').classList.add('hidden');
+            document.getElementById('timeChartWrap').innerHTML = '';
+            var descEl = document.getElementById('timeChartDesc');
+            if (descEl) descEl.classList.add('hidden');
+          }
+
+          resultsSection.classList.remove('hidden');
+        } catch (_) {
+          resultsSection.classList.remove('hidden');
+          document.getElementById('cxValue').textContent = '—';
+          document.getElementById('cxGaugeFill').style.transform = 'rotate(-90deg)';
+          document.getElementById('cxGaugeFill').className = 'cx-gauge-fill';
+        }
+      }
+
+      btnUpload.addEventListener('click', upload);
+      btnAnalyze.addEventListener('click', startAnalyze);
+    })();
+  </script>
+</body>
+</html>

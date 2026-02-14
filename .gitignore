@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Veri ve modeller
+data/raw/
+data/processed/
+models/*.pkl
+models/*.h5
+*.wav
+*.mp3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ortam değişkenleri
+.env
+
+# Loglar
+logs/
+*.log
