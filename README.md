@@ -6,6 +6,7 @@
 </p>
 <p align="center">
   <a href="#-özellikler">Özellikler</a> •
+  <a href="#-teknik-mimari">Mimari</a> •
   <a href="#-kurulum">Kurulum</a> •
   <a href="#-hızlı-başlangıç">Hızlı Başlangıç</a> •
   <a href="#-proje-yapısı">Proje Yapısı</a> •
@@ -30,6 +31,23 @@
 | 🔀 **Diyarizasyon** | Konuşmacı ayrımı (müşteri / temsilci) |
 | 🌐 **Web arayüzü** | Ses yükleme, analiz tetikleme ve simülasyon sayfası (FastAPI) |
 | ⚡ **Edge odaklı** | Düşük gecikme, yerelde işleme senaryoları |
+
+---
+
+## 🏗 Teknik Mimari
+
+Sistem akışı: **Web UI** → **FastAPI** → **AI Pipeline (EdgeMind CX)** → sonuçlar UI’a döner; **Edge Simulation** arayüzü aynı UI içinde simüle metrikleri gösterir.
+
+```mermaid
+flowchart LR
+  UI[Web UI] --> API[FastAPI]
+  API --> PIPE[AI Pipeline]
+  PIPE --> API
+  API --> UI
+  SIM[Edge Simulation] --> UI
+```
+
+Detaylı diyagram ve bileşen açıklamaları: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
 
 ---
 
